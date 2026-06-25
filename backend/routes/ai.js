@@ -125,7 +125,10 @@ Always represent the university professionally and positively.`;
 
     const reply = await callAI(messages, systemPrompt);
     res.json({ success: true, reply: reply || 'Sorry, I could not respond.' });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+  } catch (err) {
+    console.error('AI /chat error:', err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 module.exports = router;

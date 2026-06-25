@@ -23,7 +23,8 @@ const AIChatbot = () => {
     try {
       const res = await aiAPI.chat({ message: text, history: messages.slice(-6) });
       setMessages(prev => [...prev, { role: 'assistant', content: res.data.reply }]);
-    } catch {
+    } catch (err) {
+      console.error('AI chat error:', err.response?.data || err.message);
       setMessages(prev => [...prev, { role: 'assistant', content: '❌ Waan ka xumahay, jawaab ma soo celiyaan kartid. Dib u isku day.' }]);
     }
     setLoading(false);
