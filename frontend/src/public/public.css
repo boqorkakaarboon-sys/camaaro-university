@@ -1,0 +1,402 @@
+/* ===========================================================
+   Camaaro University — Public Site
+   Palette derived from graduation regalia: deep crimson (#8c1f2b),
+   warm cream (#faf6ef), academic navy (#1a3a6b), soft gold (#c9a227)
+   Display face: Playfair Display (already loaded). Body: system sans.
+   =========================================================== */
+
+.pub-root {
+  --crimson: #8c1f2b;
+  --crimson-dark: #6b1620;
+  --crimson-light: #fbe9ea;
+  --cream: #faf6ef;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cream);
+  color: #2a2018;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.pub-root h1, .pub-root h2, .pub-root h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* ---------- Header ---------- */
+.pub-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem clamp(1.25rem, 4vw, 3rem);
+  background: rgba(250, 246, 239, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(140, 31, 43, 0.12);
+}
+
+.pub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.pub-seal {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--crimson);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 0 0 3px var(--cream), 0 0 0 4px var(--crimson);
+}
+.pub-seal.small { width: 28px; height: 28px; font-size: 0.7rem; }
+
+.pub-brand-text { font-size: 1.05rem; }
+.pub-brand-text strong { color: var(--crimson); }
+
+.pub-nav { display: flex; align-items: center; gap: 1.75rem; }
+.pub-nav a {
+  text-decoration: none;
+  color: #574a3c;
+  font-weight: 500;
+  font-size: 0.92rem;
+  position: relative;
+  padding: 0.3rem 0;
+}
+.pub-nav a.active { color: var(--crimson); }
+.pub-nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 2px;
+  background: var(--crimson);
+  border-radius: 2px;
+}
+
+.pub-login-btn {
+  background: var(--crimson) !important;
+  color: #fff !important;
+  padding: 0.55rem 1.3rem !important;
+  border-radius: 30px;
+  font-weight: 600 !important;
+  transition: background 0.2s, transform 0.15s;
+}
+.pub-login-btn:hover { background: var(--crimson-dark) !important; transform: translateY(-1px); }
+
+.pub-burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+.pub-burger span { width: 22px; height: 2px; background: var(--crimson); border-radius: 2px; }
+
+/* ---------- Hero ---------- */
+.pub-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 3rem;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.pub-eyebrow {
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--crimson);
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+}
+
+.pub-hero-text h1 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1.08;
+  font-weight: 700;
+  color: #2a2018;
+  margin-bottom: 1.25rem;
+}
+.pub-accent { color: var(--crimson); font-style: italic; }
+
+.pub-hero-sub {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #6b5d4d;
+  max-width: 480px;
+  margin-bottom: 1.75rem;
+}
+
+.pub-hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.pub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.pub-btn-primary { background: var(--crimson); color: #fff; }
+.pub-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(140,31,43,0.3); }
+.pub-btn-ghost { background: transparent; color: var(--crimson); border: 1.5px solid var(--crimson); }
+.pub-btn-ghost:hover { background: var(--crimson-light); }
+
+.pub-hero-art { display: flex; justify-content: center; }
+.pub-hero-photo-wrap {
+  position: relative;
+  width: min(380px, 100%);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(140, 31, 43, 0.22);
+  border: 6px solid #fff;
+}
+.pub-hero-photo-wrap img { width: 100%; display: block; }
+
+.pub-hero-seal-badge {
+  position: absolute;
+  bottom: -18px;
+  right: -18px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--gold, #c9a227);
+  color: #2a2018;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  border: 4px solid var(--cream);
+}
+.pub-hero-seal-badge span { font-size: 0.55rem; letter-spacing: 0.1em; font-weight: 700; }
+.pub-hero-seal-badge strong { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+
+/* ---------- Stats strip ---------- */
+.pub-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--crimson);
+  color: #fff;
+  padding: 2rem clamp(1.25rem, 4vw, 3rem);
+}
+.pub-stat { text-align: center; padding: 0.5rem; }
+.pub-stat strong {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  margin-bottom: 0.2rem;
+}
+.pub-stat span { font-size: 0.8rem; opacity: 0.85; letter-spacing: 0.02em; }
+
+/* ---------- Generic section ---------- */
+.pub-section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem);
+}
+.pub-section-head { text-align: center; max-width: 620px; margin: 0 auto 2.75rem; }
+.pub-section-head h2 { font-size: clamp(1.8rem, 3.5vw, 2.4rem); color: #2a2018; }
+
+.pub-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.75rem;
+}
+.pub-highlight-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 2rem 1.75rem;
+  border: 1px solid rgba(140,31,43,0.08);
+  box-shadow: 0 4px 18px rgba(140,31,43,0.06);
+}
+.pub-highlight-icon { font-size: 1.8rem; margin-bottom: 0.85rem; }
+.pub-highlight-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; color: var(--crimson); }
+.pub-highlight-card p { font-size: 0.92rem; line-height: 1.6; color: #6b5d4d; }
+
+/* ---------- Spotlight ---------- */
+.pub-spotlight {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 3rem;
+  align-items: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3rem);
+}
+.pub-spotlight-photo img {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(140,31,43,0.18);
+}
+.pub-spotlight-text h2 {
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-style: italic;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+  color: #2a2018;
+}
+.pub-spotlight-text p { color: #6b5d4d; line-height: 1.7; margin-bottom: 1.25rem; }
+.pub-link-arrow { color: var(--crimson); font-weight: 600; text-decoration: none; }
+.pub-link-arrow:hover { text-decoration: underline; }
+
+/* ---------- CTA band ---------- */
+.pub-cta-band {
+  text-align: center;
+  background: linear-gradient(135deg, #1a3a6b, #102448);
+  color: #fff;
+  padding: clamp(3rem, 6vw, 4.5rem) 1.5rem;
+}
+.pub-cta-band h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.6rem; }
+.pub-cta-band p { color: #c8d4ea; margin-bottom: 1.75rem; }
+.pub-cta-band .pub-hero-cta { justify-content: center; }
+.pub-cta-band .pub-btn-ghost { color: #fff; border-color: rgba(255,255,255,0.5); }
+.pub-cta-band .pub-btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+/* ---------- Page hero (About / Faculties) ---------- */
+.pub-page-hero {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
+}
+.pub-page-hero h1 { font-size: clamp(2.1rem, 4.5vw, 3rem); margin-bottom: 1rem; }
+
+/* ---------- About grid ---------- */
+.pub-about-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 3rem;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem) clamp(3rem, 5vw, 4rem);
+}
+.pub-about-photo img {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(140,31,43,0.18);
+}
+.pub-about-copy h2 { color: var(--crimson); margin-bottom: 1rem; font-size: 1.6rem; }
+.pub-about-copy p { color: #6b5d4d; line-height: 1.75; margin-bottom: 1rem; }
+
+/* ---------- Timeline ---------- */
+.pub-timeline { display: flex; flex-direction: column; gap: 1.75rem; max-width: 720px; margin: 0 auto; }
+.pub-timeline-item { display: flex; gap: 1.25rem; }
+.pub-timeline-marker {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--crimson-light);
+  color: var(--crimson);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-family: 'Playfair Display', serif;
+}
+.pub-timeline-item h3 { font-size: 1.1rem; color: #2a2018; margin-bottom: 0.3rem; }
+.pub-timeline-item p { color: #6b5d4d; font-size: 0.92rem; line-height: 1.6; }
+
+/* ---------- Faculties ---------- */
+.pub-faculty-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
+}
+.pub-faculty-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 1.85rem;
+  border: 1px solid rgba(140,31,43,0.08);
+  box-shadow: 0 4px 18px rgba(140,31,43,0.06);
+}
+.pub-faculty-icon { font-size: 1.9rem; margin-bottom: 0.75rem; }
+.pub-faculty-card h3 { font-size: 1.1rem; color: var(--crimson); margin-bottom: 0.5rem; }
+.pub-faculty-card p { font-size: 0.88rem; color: #6b5d4d; line-height: 1.55; margin-bottom: 0.85rem; }
+.pub-faculty-card ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.pub-faculty-card li {
+  font-size: 0.8rem;
+  color: #8c1f2b;
+  background: var(--crimson-light);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.pub-note-band {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem) clamp(2.5rem, 4vw, 3.5rem);
+  text-align: center;
+}
+.pub-note-band p { font-size: 0.88rem; color: #8a7a64; line-height: 1.6; }
+
+/* ---------- Footer ---------- */
+.pub-footer { background: #1c140f; color: #d8cfc4; margin-top: auto; }
+.pub-footer-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.pub-footer-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; color: #fff; }
+.pub-footer-links { display: flex; gap: 1.5rem; }
+.pub-footer-links a { color: #d8cfc4; text-decoration: none; font-size: 0.88rem; }
+.pub-footer-links a:hover { color: #fff; }
+.pub-footer-contact { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; align-items: flex-end; }
+.pub-footer-bottom {
+  text-align: center;
+  font-size: 0.78rem;
+  color: #8a7a64;
+  padding: 1rem 0 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  margin: 0 clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .pub-hero, .pub-spotlight, .pub-about-grid { grid-template-columns: 1fr; }
+  .pub-spotlight-photo, .pub-about-photo { order: -1; max-width: 360px; margin: 0 auto; }
+  .pub-stats { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+}
+
+@media (max-width: 760px) {
+  .pub-burger { display: flex; }
+  .pub-nav {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: var(--cream);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem clamp(1.25rem, 4vw, 3rem) 1.5rem;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(140,31,43,0.12);
+    display: none;
+  }
+  .pub-nav.open { display: flex; }
+  .pub-login-btn { align-self: flex-start; }
+  .pub-footer-inner { flex-direction: column; text-align: center; }
+  .pub-footer-contact { align-items: center; }
+}

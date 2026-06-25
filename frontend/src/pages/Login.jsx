@@ -107,6 +107,9 @@ const Login = () => {
       {/* RIGHT — login form */}
       <div className="login-right">
         <div className="login-card">
+          <Link to="/home" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none', marginBottom: '1.25rem' }}>
+            ← Back to Home
+          </Link>
           <div className="login-card-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem', marginBottom: '0.5rem' }}>
               <div style={{
