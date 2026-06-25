@@ -2,20 +2,37 @@ const express = require('express');
 const router  = express.Router();
 const { protect, authorize } = require('../middleware/auth');
 
-const callClaude = async (prompt, systemPrompt = '') => {
-  const body = {
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1500,
-    messages: [{ role: 'user', content: prompt }],
-  };
-  if (systemPrompt) body.system = systemPrompt;
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+// OpenRouter — OpenAI-compatible API with free models.
+// Get a free key at https://openrouter.ai/keys (no credit card required).
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free';
+
+const callAI = async (messages, systemPrompt = '') => {
+  const fullMessages = systemPrompt
+    ? [{ role: 'system', content: systemPrompt }, ...messages]
+    : messages;
+
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'x-api-key': process.env.ANTHROPIC_API_KEY || '' },
-    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY || ''}`,
+      'HTTP-Referer': process.env.FRONTEND_URL || 'http://localhost:5173',
+      'X-Title': 'Camaaro University',
+    },
+    body: JSON.stringify({
+      model: OPENROUTER_MODEL,
+      messages: fullMessages,
+      max_tokens: 1500,
+    }),
   });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`OpenRouter API error (${res.status}): ${errText.slice(0, 300)}`);
+  }
+
   const data = await res.json();
-  return data.content?.[0]?.text || '';
+  return data.choices?.[0]?.message?.content || '';
 };
 
 // AI Exam Generator
@@ -28,7 +45,10 @@ Return ONLY a JSON array like this:
 [{"type":"mcq","text":"Question?","options":["A","B","C","D"],"answer":"A","points":1},...]
 For true_false: options=["True","False"], answer="True" or "False"
 For short_answer: no options, answer is a sample answer string.`;
-    const raw = await callClaude(prompt, 'You are an expert exam question generator. Return only valid JSON, no markdown or explanation.');
+    const raw = await callAI(
+      [{ role: 'user', content: prompt }],
+      'You are an expert exam question generator. Return only valid JSON, no markdown or explanation.'
+    );
     let questions;
     try {
       const clean = raw.replace(/```json|```/g, '').trim();
@@ -52,7 +72,10 @@ Student Answer: ${answer}
 Max Points: ${maxPoints || 10}
 
 Return ONLY JSON: {"score": number, "feedback": "string", "strengths": "string", "improvements": "string"}`;
-    const raw = await callClaude(prompt, 'You are a fair and constructive academic grader. Return only valid JSON.');
+    const raw = await callAI(
+      [{ role: 'user', content: prompt }],
+      'You are a fair and constructive academic grader. Return only valid JSON.'
+    );
     let result;
     try {
       const clean = raw.replace(/```json|```/g, '').trim();
@@ -72,6 +95,7 @@ router.post('/chat', protect, async (req, res) => {
       ...history.slice(-6).map(h => ({ role: h.role, content: h.content })),
       { role: 'user', content: message },
     ];
+
     const universityInfo = `
 === CAMAARO UNIVERSITY — XOGTA RASMIGA AH ===
 - Magaca Jaamacadda: Camaaro University
@@ -99,19 +123,8 @@ Your role:
 
 Always represent the university professionally and positively.`;
 
-    const messagesPayload = {
-      model: 'claude-sonnet-4-6',
-      max_tokens: 800,
-      system: systemPrompt,
-      messages,
-    };
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'x-api-key': process.env.ANTHROPIC_API_KEY || '' },
-      body: JSON.stringify(messagesPayload),
-    });
-    const data = await response.json();
-    res.json({ success: true, reply: data.content?.[0]?.text || 'Sorry, I could not respond.' });
+    const reply = await callAI(messages, systemPrompt);
+    res.json({ success: true, reply: reply || 'Sorry, I could not respond.' });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
