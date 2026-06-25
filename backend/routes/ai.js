@@ -4,17 +4,16 @@ const { protect, authorize } = require('../middleware/auth');
 
 // OpenRouter — OpenAI-compatible API with free models.
 // Get a free key at https://openrouter.ai/keys (no credit card required).
-const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free';
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-exp:free';
 
 const callAI = async (messages, systemPrompt = '') => {
   const apiKey = process.env.OPENROUTER_API_KEY || '';
-  console.log('OpenRouter key present:', !!apiKey, '| length:', apiKey.length, '| starts with:', apiKey.slice(0, 8));
 
   const fullMessages = systemPrompt
     ? [{ role: 'system', content: systemPrompt }, ...messages]
     : messages;
 
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  const doRequest = async () => fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -28,6 +27,14 @@ const callAI = async (messages, systemPrompt = '') => {
       max_tokens: 1500,
     }),
   });
+
+  let res = await doRequest();
+
+  // Retry once on rate-limit (free models occasionally hit upstream limits)
+  if (res.status === 429) {
+    await new Promise((r) => setTimeout(r, 1500));
+    res = await doRequest();
+  }
 
   if (!res.ok) {
     const errText = await res.text();
