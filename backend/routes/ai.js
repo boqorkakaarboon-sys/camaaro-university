@@ -7,6 +7,9 @@ const { protect, authorize } = require('../middleware/auth');
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free';
 
 const callAI = async (messages, systemPrompt = '') => {
+  const apiKey = process.env.OPENROUTER_API_KEY || '';
+  console.log('OpenRouter key present:', !!apiKey, '| length:', apiKey.length, '| starts with:', apiKey.slice(0, 8));
+
   const fullMessages = systemPrompt
     ? [{ role: 'system', content: systemPrompt }, ...messages]
     : messages;
@@ -15,7 +18,7 @@ const callAI = async (messages, systemPrompt = '') => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY || ''}`,
+      'Authorization': `Bearer ${apiKey}`,
       'HTTP-Referer': process.env.FRONTEND_URL || 'http://localhost:5173',
       'X-Title': 'Camaaro University',
     },
