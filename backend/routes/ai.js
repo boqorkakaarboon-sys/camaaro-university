@@ -4,7 +4,9 @@ const { protect, authorize } = require('../middleware/auth');
 
 // OpenRouter — OpenAI-compatible API with free models.
 // Get a free key at https://openrouter.ai/keys (no credit card required).
-const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-exp:free';
+// 'openrouter/free' auto-routes to whichever free model is currently available,
+// avoiding breakage when specific :free model IDs get deprecated/renamed.
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'openrouter/free';
 
 const callAI = async (messages, systemPrompt = '') => {
   const apiKey = process.env.OPENROUTER_API_KEY || '';
