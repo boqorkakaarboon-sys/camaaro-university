@@ -21,8 +21,17 @@ export const ToastProvider = ({ children }) => {
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), duration);
   }, []);
 
+  // Convenience methods so both calling styles work across the app:
+  //   useToast().showToast(msg, 'success')   <- newer pages
+  //   useToast().success(msg) / .error(msg)  <- original pages (Admin/Teacher/Student)
+  const success = useCallback((msg, duration) => showToast(msg, 'success', duration), [showToast]);
+  const error   = useCallback((msg, duration) => showToast(msg, 'error', duration), [showToast]);
+  const info    = useCallback((msg, duration) => showToast(msg, 'info', duration), [showToast]);
+  const warning = useCallback((msg, duration) => showToast(msg, 'warning', duration), [showToast]);
+  const warn    = warning; // alias used by some pages (e.g. ExamBuilder)
+
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ToastContext.Provider value={{ showToast, success, error, info, warning, warn }}>
       {children}
       <div style={{ position: 'fixed', top: 20, right: 20, zIndex: 9999, display: 'flex', flexDirection: 'column', gap: '0.6rem', maxWidth: 360 }}>
         {toasts.map((t) => {
