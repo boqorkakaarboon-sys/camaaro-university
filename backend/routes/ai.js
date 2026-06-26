@@ -4,9 +4,11 @@ const { protect, authorize } = require('../middleware/auth');
 
 // OpenRouter — OpenAI-compatible API with free models.
 // Get a free key at https://openrouter.ai/keys (no credit card required).
-// 'openrouter/free' auto-routes to whichever free model is currently available,
-// avoiding breakage when specific :free model IDs get deprecated/renamed.
-const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'openrouter/free';
+// NOTE: 'openrouter/free' randomly routes to ANY free model, including
+// non-chat models (safety classifiers, embeddings, etc) which breaks chat.
+// Use a specific, known-good free chat model instead.
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free';
+const OPENROUTER_FALLBACK_MODEL = 'qwen/qwen-2.5-72b-instruct:free';
 
 const callAI = async (messages, systemPrompt = '') => {
   const apiKey = process.env.OPENROUTER_API_KEY || '';
@@ -15,7 +17,7 @@ const callAI = async (messages, systemPrompt = '') => {
     ? [{ role: 'system', content: systemPrompt }, ...messages]
     : messages;
 
-  const doRequest = async () => fetch('https://openrouter.ai/api/v1/chat/completions', {
+  const doRequest = async (model) => fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -24,27 +26,39 @@ const callAI = async (messages, systemPrompt = '') => {
       'X-Title': 'Camaaro University',
     },
     body: JSON.stringify({
-      model: OPENROUTER_MODEL,
+      model,
       messages: fullMessages,
       max_tokens: 1500,
     }),
   });
 
-  let res = await doRequest();
+  const tryModel = async (model) => {
+    let res = await doRequest(model);
+    if (res.status === 429) {
+      await new Promise((r) => setTimeout(r, 1500));
+      res = await doRequest(model);
+    }
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`OpenRouter API error (${res.status}) [${model}]: ${errText.slice(0, 300)}`);
+    }
+    const data = await res.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (!content || !content.trim()) {
+      throw new Error(`Model ${model} returned empty content (finish_reason: ${data.choices?.[0]?.finish_reason})`);
+    }
+    return content;
+  };
 
-  // Retry once on rate-limit (free models occasionally hit upstream limits)
-  if (res.status === 429) {
-    await new Promise((r) => setTimeout(r, 1500));
-    res = await doRequest();
+  try {
+    return await tryModel(OPENROUTER_MODEL);
+  } catch (firstErr) {
+    try {
+      return await tryModel(OPENROUTER_FALLBACK_MODEL);
+    } catch (secondErr) {
+      throw new Error(`Primary failed: ${firstErr.message} | Fallback failed: ${secondErr.message}`);
+    }
   }
-
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`OpenRouter API error (${res.status}): ${errText.slice(0, 300)}`);
-  }
-
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || '';
 };
 
 // AI Exam Generator
