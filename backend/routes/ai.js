@@ -9,6 +9,7 @@ const { protect, authorize } = require('../middleware/auth');
 // Use a specific, known-good free chat model instead.
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free';
 const OPENROUTER_FALLBACK_MODEL = 'qwen/qwen-2.5-72b-instruct:free';
+const OPENROUTER_FALLBACK_MODEL_2 = 'mistralai/mistral-7b-instruct:free';
 
 const callAI = async (messages, systemPrompt = '') => {
   const apiKey = process.env.OPENROUTER_API_KEY || '';
@@ -33,11 +34,7 @@ const callAI = async (messages, systemPrompt = '') => {
   });
 
   const tryModel = async (model) => {
-    let res = await doRequest(model);
-    if (res.status === 429) {
-      await new Promise((r) => setTimeout(r, 1500));
-      res = await doRequest(model);
-    }
+    const res = await doRequest(model);
     if (!res.ok) {
       const errText = await res.text();
       throw new Error(`OpenRouter API error (${res.status}) [${model}]: ${errText.slice(0, 300)}`);
@@ -50,15 +47,17 @@ const callAI = async (messages, systemPrompt = '') => {
     return content;
   };
 
-  try {
-    return await tryModel(OPENROUTER_MODEL);
-  } catch (firstErr) {
+  // Try a short list of known-good free models in order; first success wins.
+  const candidates = [OPENROUTER_MODEL, OPENROUTER_FALLBACK_MODEL, OPENROUTER_FALLBACK_MODEL_2];
+  const errors = [];
+  for (const model of candidates) {
     try {
-      return await tryModel(OPENROUTER_FALLBACK_MODEL);
-    } catch (secondErr) {
-      throw new Error(`Primary failed: ${firstErr.message} | Fallback failed: ${secondErr.message}`);
+      return await tryModel(model);
+    } catch (err) {
+      errors.push(err.message);
     }
   }
+  throw new Error(`All models failed: ${errors.join(' || ')}`);
 };
 
 // AI Exam Generator
