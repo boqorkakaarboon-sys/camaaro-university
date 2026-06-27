@@ -32,6 +32,7 @@ export const authAPI = {
   getNotifications:()  => api.get('/auth/notifications'),
   readAllNotifs:   ()  => api.put('/auth/notifications/read-all'),
   verifyCert:      (code) => api.get(`/auth/verify-certificate/${code}`),
+  getMyCertificates:() => api.get('/auth/my-certificates'),
 };
 
 export const usersAPI = {

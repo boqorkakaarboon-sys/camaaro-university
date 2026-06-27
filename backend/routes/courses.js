@@ -133,14 +133,16 @@ router.put('/:id/assign-teacher', protect, authorize('admin'), async (req, res) 
   try {
     const { teacherId } = req.body;
 
-    const teacher = await User.findOne({ _id: teacherId, role: 'teacher' });
-    if (!teacher) {
-      return res.status(404).json({ success: false, message: 'Teacher not found' });
+    if (teacherId) {
+      const teacher = await User.findOne({ _id: teacherId, role: 'teacher' });
+      if (!teacher) {
+        return res.status(404).json({ success: false, message: 'Teacher not found' });
+      }
     }
 
     const course = await Course.findByIdAndUpdate(
       req.params.id,
-      { teacher: teacherId },
+      { teacher: teacherId || null },
       { new: true }
     ).populate('teacher', 'name email');
 
@@ -148,7 +150,7 @@ router.put('/:id/assign-teacher', protect, authorize('admin'), async (req, res) 
       return res.status(404).json({ success: false, message: 'Course not found' });
     }
 
-    res.json({ success: true, message: 'Teacher assigned successfully', course });
+    res.json({ success: true, message: teacherId ? 'Teacher assigned successfully' : 'Teacher unassigned', course });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

@@ -262,6 +262,8 @@ const AdminCourses = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showEnroll, setShowEnroll] = useState(null);
+  const [showAssignTeacher, setShowAssignTeacher] = useState(null);
+  const [assignTeacherId, setAssignTeacherId] = useState('');
   const [enrollStudentId, setEnrollStudentId] = useState('');
   const [form, setForm] = useState({ title: '', code: '', description: '', credits: 3, department: '', teacher: '', maxStudents: 50, schedule: '' });
 
@@ -300,6 +302,14 @@ const AdminCourses = () => {
     } catch (err) { toast.error(err.response?.data?.message || 'Enrollment failed'); }
   };
 
+  const handleAssignTeacher = async () => {
+    try {
+      await coursesAPI.assignTeacher(showAssignTeacher, assignTeacherId || null);
+      toast.success(assignTeacherId ? 'Teacher assigned!' : 'Teacher unassigned');
+      setShowAssignTeacher(null); setAssignTeacherId(''); load();
+    } catch (err) { toast.error(err.response?.data?.message || 'Failed to assign teacher'); }
+  };
+
   return (
     <div>
       <div className="panel-header">
@@ -322,6 +332,7 @@ const AdminCourses = () => {
                   <td>{c.students?.length || 0} / {c.maxStudents}</td>
                   <td>
                     <div className="action-btns">
+                      <button className="btn-sm btn-secondary" onClick={() => { setShowAssignTeacher(c._id); setAssignTeacherId(c.teacher?._id || ''); }}>👤 Teacher</button>
                       <button className="btn-sm btn-secondary" onClick={() => { setShowEnroll(c._id); }}>Enroll</button>
                       <button className="btn-sm btn-danger" onClick={() => handleDelete(c._id)}>Delete</button>
                     </div>
@@ -376,6 +387,22 @@ const AdminCourses = () => {
           <div className="modal-actions">
             <button className="btn-secondary" onClick={() => setShowEnroll(null)}>Cancel</button>
             <button className="btn-primary" onClick={handleEnroll}>Enroll Student</button>
+          </div>
+        </Modal>
+      )}
+
+      {showAssignTeacher && (
+        <Modal title="Assign / Reassign Teacher" onClose={() => setShowAssignTeacher(null)}>
+          <div className="form-group">
+            <label>Select Teacher</label>
+            <select value={assignTeacherId} onChange={(e) => setAssignTeacherId(e.target.value)}>
+              <option value="">— Unassigned —</option>
+              {teachers.map((t) => <option key={t._id} value={t._id}>{t.name} ({t.email})</option>)}
+            </select>
+          </div>
+          <div className="modal-actions">
+            <button className="btn-secondary" onClick={() => setShowAssignTeacher(null)}>Cancel</button>
+            <button className="btn-primary" onClick={handleAssignTeacher}>Save</button>
           </div>
         </Modal>
       )}
