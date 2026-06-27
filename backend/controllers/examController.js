@@ -275,6 +275,9 @@ exports.submitExam = async (req, res) => {
     result.marksObtained = marksObtained;
     result.totalMarks = exam.totalMarks;
     result.percentage = exam.totalMarks > 0 ? parseFloat(((marksObtained / exam.totalMarks) * 100).toFixed(2)) : 0;
+    // Provisional pass/fail for the manual-grading-pending case (no grade yet).
+    // When grading is complete, computeGrade() below recalculates 'passed' from
+    // the grade itself so the two values can never contradict each other.
     result.passed = result.marksObtained >= exam.passingMarks;
     result.needsManualGrading = needsManualGrading;
     result.status = needsManualGrading ? 'submitted' : 'graded';
@@ -426,7 +429,7 @@ exports.manualGrade = async (req, res) => {
     result.percentage = result.totalMarks > 0
       ? parseFloat(((result.marksObtained / result.totalMarks) * 100).toFixed(2))
       : 0;
-    result.passed = result.marksObtained >= result.exam.passingMarks;
+    // computeGrade() sets both 'grade' and 'passed' together, so they can never disagree.
     result.computeGrade();
     result.status = 'graded';
     result.needsManualGrading = false;
@@ -474,7 +477,7 @@ exports.addResult = async (req, res) => {
     result.percentage = exam.totalMarks > 0
       ? parseFloat(((result.marksObtained / exam.totalMarks) * 100).toFixed(2))
       : 0;
-    result.passed = result.marksObtained >= exam.passingMarks;
+    // computeGrade() sets both 'grade' and 'passed' together, so they can never disagree.
     result.computeGrade();
 
     await result.save();
