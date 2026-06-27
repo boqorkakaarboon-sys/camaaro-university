@@ -60,10 +60,9 @@ resultSchema.methods.computeGrade = function () {
   else if (p >= 50) { this.grade = 'C'; this.gpa = 2.0; }
   else if (p >= 40) { this.grade = 'D'; this.gpa = 1.0; }
   else { this.grade = 'F'; this.gpa = 0.0; }
-  // Keep pass/fail in sync with the grade we just computed — a grade of 'F'
-  // always means failed, anything else always means passed. This guarantees
-  // 'passed' and 'grade' can never contradict each other (e.g. A+ but "Fail").
-  this.passed = this.grade !== 'F';
+  // Passing threshold: C+ (55%) and above is a pass. C and D are below the
+  // passing bar even though they aren't 'F' — only A+/A/B+/B/C+ count as passed.
+  this.passed = ['A+', 'A', 'B+', 'B', 'C+'].includes(this.grade);
 };
 
 resultSchema.index({ student: 1, exam: 1 }, { unique: true });
