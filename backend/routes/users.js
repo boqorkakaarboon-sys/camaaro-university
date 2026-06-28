@@ -19,6 +19,7 @@ router.get('/', protect, authorize('admin'), async (req, res) => {
       filter.$or = [
         { name: { $regex: search, $options: 'i' } },
         { email: { $regex: search, $options: 'i' } },
+        { studentId: { $regex: search, $options: 'i' } },
       ];
     }
 

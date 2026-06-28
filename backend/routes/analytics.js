@@ -110,6 +110,44 @@ router.get('/my-progress', protect, authorize('student'), async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
+// STUDENT PROGRESS (teacher/admin viewing any specific student's full result history)
+router.get('/student/:studentId', protect, authorize('admin', 'teacher'), async (req, res) => {
+  try {
+    const student = await User.findOne({ _id: req.params.studentId, role: 'student' }).select('name studentId email department avatar');
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student not found' });
+    }
+
+    const results = await Result.find({ student: req.params.studentId, status: 'graded' })
+      .populate('exam', 'title')
+      .populate('course', 'title code')
+      .sort({ createdAt: 1 });
+
+    const trend = results.map(r => ({
+      date: r.createdAt,
+      examTitle: r.exam?.title,
+      course: r.course?.title,
+      percentage: r.percentage,
+      gpa: r.gpa,
+      grade: r.grade,
+      passed: r.passed,
+    }));
+
+    const avg = results.length ? Math.round(results.reduce((s, r) => s + r.percentage, 0) / results.length) : 0;
+    const avgGpa = results.length ? (results.reduce((s, r) => s + r.gpa, 0) / results.length).toFixed(2) : '0.00';
+    const passedCount = results.filter((r) => r.passed).length;
+
+    res.json({
+      success: true,
+      student,
+      stats: { avg, avgGpa, count: results.length, passedCount, failedCount: results.length - passedCount },
+      trend,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // EXAM STATISTICS — per-question breakdown (teacher/admin)
 router.get('/exam-stats/:examId', protect, authorize('admin','teacher'), async (req, res) => {
   try {

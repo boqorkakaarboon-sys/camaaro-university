@@ -134,6 +134,7 @@ export const analyticsAPI = {
   auditLog:    () => api.get('/analytics/auditlog'),
   leaderboard: (courseId) => api.get('/analytics/leaderboard', { params: { courseId } }),
   myProgress:  () => api.get('/analytics/my-progress'),
+  studentDetail: (studentId) => api.get(`/analytics/student/${studentId}`),
   examStats:   (examId) => api.get(`/analytics/exam-stats/${examId}`),
 };
 
