@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import ExamBuilder from '../components/ExamBuilder';
 import ResultDetail from './ResultDetail';
+import GradeStudents from './GradeStudents';
 
 /* ─── Teacher Courses ─────────────────────────────── */
 const TeacherCourses = () => {
@@ -149,6 +150,7 @@ const Teacher = () => (
       <Route index element={<TeacherOverview />} />
       <Route path="courses" element={<TeacherCourses />} />
       <Route path="exams" element={<TeacherExams />} />
+      <Route path="results" element={<GradeStudents />} />
       <Route path="exams/:examId/results" element={<ResultDetail />} />
     </Routes>
   </div>
