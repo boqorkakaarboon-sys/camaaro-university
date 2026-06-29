@@ -1,10 +1,4 @@
-/* ===========================================================
-   Camaaro University — Public Site
-   Palette derived from graduation regalia: deep crimson (#8c1f2b),
-   warm cream (#faf6ef), academic navy (#1a3a6b), soft gold (#c9a227)
-   Display face: Playfair Display (already loaded). Body: system sans.
-   =========================================================== */
-
+/* Camaaro University — Public Site */
 .pub-root {
   --crimson: #8c1f2b;
   --crimson-dark: #6b1620;
@@ -22,7 +16,6 @@
   font-family: 'Playfair Display', Georgia, serif;
 }
 
-/* ---------- Header ---------- */
 .pub-header {
   position: sticky;
   top: 0;
@@ -103,7 +96,6 @@
 }
 .pub-burger span { width: 22px; height: 2px; background: var(--crimson); border-radius: 2px; }
 
-/* ---------- Hero ---------- */
 .pub-hero {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -177,7 +169,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: var(--gold, #c9a227);
+  background: #c9a227;
   color: #2a2018;
   display: flex;
   flex-direction: column;
@@ -189,7 +181,6 @@
 .pub-hero-seal-badge span { font-size: 0.55rem; letter-spacing: 0.1em; font-weight: 700; }
 .pub-hero-seal-badge strong { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
 
-/* ---------- Stats strip ---------- */
 .pub-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -206,7 +197,6 @@
 }
 .pub-stat span { font-size: 0.8rem; opacity: 0.85; letter-spacing: 0.02em; }
 
-/* ---------- Generic section ---------- */
 .pub-section {
   max-width: 1180px;
   margin: 0 auto;
@@ -231,7 +221,6 @@
 .pub-highlight-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; color: var(--crimson); }
 .pub-highlight-card p { font-size: 0.92rem; line-height: 1.6; color: #6b5d4d; }
 
-/* ---------- Spotlight ---------- */
 .pub-spotlight {
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
@@ -257,7 +246,6 @@
 .pub-link-arrow { color: var(--crimson); font-weight: 600; text-decoration: none; }
 .pub-link-arrow:hover { text-decoration: underline; }
 
-/* ---------- CTA band ---------- */
 .pub-cta-band {
   text-align: center;
   background: linear-gradient(135deg, #1a3a6b, #102448);
@@ -270,7 +258,6 @@
 .pub-cta-band .pub-btn-ghost { color: #fff; border-color: rgba(255,255,255,0.5); }
 .pub-cta-band .pub-btn-ghost:hover { background: rgba(255,255,255,0.1); }
 
-/* ---------- Page hero (About / Faculties) ---------- */
 .pub-page-hero {
   max-width: 760px;
   margin: 0 auto;
@@ -279,7 +266,6 @@
 }
 .pub-page-hero h1 { font-size: clamp(2.1rem, 4.5vw, 3rem); margin-bottom: 1rem; }
 
-/* ---------- About grid ---------- */
 .pub-about-grid {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
@@ -297,7 +283,6 @@
 .pub-about-copy h2 { color: var(--crimson); margin-bottom: 1rem; font-size: 1.6rem; }
 .pub-about-copy p { color: #6b5d4d; line-height: 1.75; margin-bottom: 1rem; }
 
-/* ---------- Timeline ---------- */
 .pub-timeline { display: flex; flex-direction: column; gap: 1.75rem; max-width: 720px; margin: 0 auto; }
 .pub-timeline-item { display: flex; gap: 1.25rem; }
 .pub-timeline-marker {
@@ -312,7 +297,6 @@
 .pub-timeline-item h3 { font-size: 1.1rem; color: #2a2018; margin-bottom: 0.3rem; }
 .pub-timeline-item p { color: #6b5d4d; font-size: 0.92rem; line-height: 1.6; }
 
-/* ---------- Faculties ---------- */
 .pub-faculty-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -349,7 +333,6 @@
 }
 .pub-note-band p { font-size: 0.88rem; color: #8a7a64; line-height: 1.6; }
 
-/* ---------- Footer ---------- */
 .pub-footer { background: #1c140f; color: #d8cfc4; margin-top: auto; }
 .pub-footer-inner {
   max-width: 1180px;
@@ -375,7 +358,6 @@
   margin: 0 clamp(1.25rem, 4vw, 3rem);
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .pub-hero, .pub-spotlight, .pub-about-grid { grid-template-columns: 1fr; }
   .pub-spotlight-photo, .pub-about-photo { order: -1; max-width: 360px; margin: 0 auto; }

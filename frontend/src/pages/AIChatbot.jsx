@@ -23,20 +23,19 @@ const AIChatbot = () => {
     try {
       const res = await aiAPI.chat({ message: text, history: messages.slice(-6) });
       setMessages(prev => [...prev, { role: 'assistant', content: res.data.reply }]);
-    } catch (err) {
-      console.error('AI chat error:', err.response?.data || err.message);
+    } catch {
       setMessages(prev => [...prev, { role: 'assistant', content: '❌ Waan ka xumahay, jawaab ma soo celiyaan kartid. Dib u isku day.' }]);
     }
     setLoading(false);
   };
 
-  const suggestions = ['Jaamacadda yaa leh?', 'Jaamacadda halkee ku taal?', 'Lambarka jaamacadda?', 'Maxay tahay Pythagorean theorem?'];
+  const suggestions = ['Maxay tahay Pythagorean theorem?', 'Binary search sidee u shaqeeyaa?', 'GPA sidee loo xisaabiyaa?', 'Imtixaanka sida ugu wanaagsan ee loogu diyaar garoobo'];
 
   return (
     <div style={{ maxWidth: 750, height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
       <div style={{ marginBottom: '1rem' }}>
         <h1 style={{ color: 'var(--navy)', marginBottom: '0.15rem' }}>🤖 AI Academic Assistant</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>Powered by Camaaro University</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>Powered by Claude AI — Waxbarashada ku caawin</p>
       </div>
 
       {/* Chat area */}

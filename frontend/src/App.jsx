@@ -30,6 +30,11 @@ import MyProgress from './pages/MyProgress';
 import StudentProgress from './pages/StudentProgress';
 import ExamStatistics from './pages/ExamStatistics';
 import { CertificateVerifier } from './components/CertificateView';
+import PublicLayout from './public/PublicLayout';
+import PublicHome from './public/Home';
+import PublicAbout from './public/About';
+import PublicFaculties from './public/Faculties';
+import './public/public.css';
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -61,6 +66,9 @@ const AppRoutes = () => {
   const { user } = useAuth();
   return (
     <Routes>
+      <Route path="/home" element={<PublicLayout><PublicHome /></PublicLayout>} />
+      <Route path="/about" element={<PublicLayout><PublicAbout /></PublicLayout>} />
+      <Route path="/faculties" element={<PublicLayout><PublicFaculties /></PublicLayout>} />
       <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
@@ -88,8 +96,8 @@ const AppRoutes = () => {
       <Route path="/materials" element={<ProtectedRoute><AppLayout><CourseMaterials /></AppLayout></ProtectedRoute>} />
       <Route path="/teacher/student-progress" element={<ProtectedRoute roles={['teacher','admin']}><AppLayout><StudentProgress /></AppLayout></ProtectedRoute>} />
       <Route path="/teacher/exam-stats" element={<ProtectedRoute roles={['teacher','admin']}><AppLayout><ExamStatistics /></AppLayout></ProtectedRoute>} />
-      <Route path="/" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
-      <Route path="*" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
+      <Route path="/" element={<Navigate to={user ? '/dashboard' : '/home'} replace />} />
+      <Route path="*" element={<Navigate to={user ? '/dashboard' : '/home'} replace />} />
     </Routes>
   );
 };

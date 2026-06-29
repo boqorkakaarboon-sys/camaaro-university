@@ -29,7 +29,6 @@ const highlights = [
 
 const Home = () => (
   <>
-    {/* HERO */}
     <section className="pub-hero">
       <div className="pub-hero-text">
         <span className="pub-eyebrow">Camaaro &amp; Muqdisho</span>
@@ -57,7 +56,6 @@ const Home = () => (
       </div>
     </section>
 
-    {/* STATS STRIP */}
     <section className="pub-stats">
       {stats.map((s) => (
         <div key={s.label} className="pub-stat">
@@ -67,7 +65,6 @@ const Home = () => (
       ))}
     </section>
 
-    {/* HIGHLIGHTS */}
     <section className="pub-section">
       <div className="pub-section-head">
         <span className="pub-eyebrow">Why Camaaro</span>
@@ -84,7 +81,6 @@ const Home = () => (
       </div>
     </section>
 
-    {/* GRADUATE SPOTLIGHT */}
     <section className="pub-spotlight">
       <div className="pub-spotlight-photo">
         <img src={grad3} alt="Camaaro University graduate in red gown" />
@@ -101,7 +97,6 @@ const Home = () => (
       </div>
     </section>
 
-    {/* CTA BAND */}
     <section className="pub-cta-band">
       <h2>Ready to begin your chapter?</h2>
       <p>Admissions, courses, and faculty information are one call away.</p>

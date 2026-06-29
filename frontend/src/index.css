@@ -34,18 +34,16 @@
   --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.45);
 }
 
-/* Dark mode: only repaint page chrome (body/sidebar/navbar already use vars).
-   We deliberately do NOT touch inline-styled "white card" divs used throughout
-   the pages — forcing those dark via attribute-selector hacks caused unreadable
-   light-on-light / dark-on-dark text. Cards stay white; only the page background
-   and nav/sidebar go dark, which keeps every page readable in both themes. */
 [data-theme="dark"] body { background: var(--bg); color: var(--text); }
-
+[data-theme="dark"] .main-content,
+[data-theme="dark"] div[style*="background: #fff"],
+[data-theme="dark"] div[style*="background:#fff"] { background: var(--surface) !important; color: var(--text); }
 [data-theme="dark"] input,
 [data-theme="dark"] select,
 [data-theme="dark"] textarea {
-  background: #fff;
-  color: #1a2340;
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border) !important;
 }
 
 /* ─── Reset ─────────────────────────────────────────────────── */
@@ -77,8 +75,6 @@ textarea { font-family: 'DM Sans', sans-serif; resize: vertical; }
   overflow-y: auto;
   padding: 2rem;
   transition: margin-left 0.3s ease;
-  background: var(--bg);
-  color: var(--text);
 }
 
 .sidebar-visible .main-content { margin-left: var(--sidebar-w); }
